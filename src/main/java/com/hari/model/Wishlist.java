@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Wishlist {
-    @Id
+    @Id 
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.AUTO)
     private Long id;
 
