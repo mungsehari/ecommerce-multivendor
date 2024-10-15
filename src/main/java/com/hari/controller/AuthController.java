@@ -1,8 +1,8 @@
 package com.hari.controller;
 
 import com.hari.domain.USER_ROLE;
-import com.hari.model.VerificationCode;
 import com.hari.repository.UserRepository;
+import com.hari.request.LoginOtpRequest;
 import com.hari.request.LoginRequest;
 import com.hari.request.SignupRequest;
 import com.hari.response.ApiResponse;
@@ -34,8 +34,8 @@ public class AuthController {
     }
 
     @PostMapping("/sent/login-signup-otp")
-    public ResponseEntity<ApiResponse> sendOtpHandler(@RequestBody VerificationCode request) throws Exception {
-        authService.sendLoginOtp(request.getEmail());
+    public ResponseEntity<ApiResponse> sendOtpHandler(@RequestBody LoginOtpRequest request) throws Exception {
+        authService.sendLoginOtp(request.getEmail(),request.getRole());
         ApiResponse  response=new ApiResponse();
         response.setMessage("OTP sent successfully");
         return ResponseEntity.ok(response);
