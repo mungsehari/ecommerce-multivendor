@@ -12,7 +12,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+
 public class Cart {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.AUTO)
