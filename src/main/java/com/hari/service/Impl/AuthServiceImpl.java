@@ -3,9 +3,11 @@ package com.hari.service.Impl;
 import com.hari.config.JwtProvider;
 import com.hari.domain.USER_ROLE;
 import com.hari.model.Cart;
+import com.hari.model.Seller;
 import com.hari.model.User;
 import com.hari.model.VerificationCode;
 import com.hari.repository.CartRepository;
+import com.hari.repository.SellerRepository;
 import com.hari.repository.UserRepository;
 import com.hari.repository.VerificationCodeRepository;
 import com.hari.request.LoginRequest;
@@ -46,16 +48,28 @@ public class AuthServiceImpl implements AuthService {
     private final EmailService emailService;
 
     private final CustomerUserDetailsServiceImpl customerUserDetailsService;
+    private final SellerRepository sellerRepository;
 
     @Override
-    public void sendLoginOtp(String email) throws Exception {
+    public void sendLoginOtp(String email,USER_ROLE role) throws Exception {
         String SIGNING_PREFIX="signing_";
+
         if ( email.startsWith(SIGNING_PREFIX)){
             email=email.substring(SIGNING_PREFIX.length());
-            User user=userRepository.findByEmail(email);
-            if (user==null){
-                throw new Exception("User not exist with provided email");
+
+            if (role.equals(USER_ROLE.ROLE_SELLER)){
+                Seller seller=sellerRepository.findByEmail(email);
+                if (seller==null){
+                    throw new Exception("Seller not found ");
+                }
+
+            }else {
+                User user=userRepository.findByEmail(email);
+                if (user==null){
+                    throw new Exception("User not exist with provided email");
+                }
             }
+
         }
 
         VerificationCode isExist=verificationCodeRepository.findByEmail(email);
@@ -107,7 +121,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse signing(LoginRequest request) {
+    public AuthResponse signing(LoginRequest request) throws Exception {
         String username=request.getEmail();
         String otp=request.getOtp();
         Authentication authentication = authenticate(username, otp);
@@ -125,14 +139,19 @@ public class AuthServiceImpl implements AuthService {
         return response;
     }
 
-    private Authentication authenticate(String username, String otp) {
+    private Authentication authenticate(String username, String otp) throws Exception {
       UserDetails userDetails= customerUserDetailsService.loadUserByUsername(username);
+        String SELLER_PREFIX = "seller_";
+        if (username.startsWith(SELLER_PREFIX)) {
+
+           username=username.substring(SELLER_PREFIX.length());
+        }
       if (userDetails==null){
           throw new BadCredentialsException("invalid username ");
       }
       VerificationCode verificationCode=verificationCodeRepository.findByEmail(username);
       if (verificationCode==null || !verificationCode.getOtp().equals(otp)){
-          throw new BadCredentialsException("Wrong OTP");
+          throw new Exception("Wrong OTP");
       }
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
