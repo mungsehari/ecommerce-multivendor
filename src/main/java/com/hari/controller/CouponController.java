@@ -3,7 +3,6 @@ package com.hari.controller;
 import com.hari.model.Cart;
 import com.hari.model.Coupon;
 import com.hari.model.User;
-import com.hari.service.CartService;
 import com.hari.service.CouponService;
 import com.hari.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,25 +23,25 @@ public class CouponController {
             @RequestParam String apply,
             @RequestParam String code,
             @RequestParam double orderValue,
-            @RequestHeader("Authorization") String jwt
-    ) throws Exception {
+            @RequestHeader("Authorization") String jwt) throws Exception {
 
-        User user=userService.findUserByJwtToken(jwt);
+        User user = userService.findUserByJwtToken(jwt);
         Cart cart;
 
-        if (apply.equals("true")){
-            cart=couponService.applyCoupon(code,orderValue,user);
-        }else {
-            cart=couponService.removeCoupon(code,user);
+        if (apply.equals("true")) {
+            cart = couponService.applyCoupon(code, orderValue, user);
+        } else {
+            cart = couponService.removeCoupon(code, user);
         }
         return ResponseEntity.ok(cart);
     }
 
     @PostMapping("/admin/coupon")
-    public ResponseEntity<Coupon> createCoupon(@RequestBody Coupon coupon){
-        Coupon createCoupon=couponService.createCoupon(coupon);
+    public ResponseEntity<Coupon> createCoupon(@RequestBody Coupon coupon) {
+        Coupon createCoupon = couponService.createCoupon(coupon);
         return ResponseEntity.ok(createCoupon);
     }
+
     @DeleteMapping("/admin/delete/{id}")
     public ResponseEntity<?> deleteCoupon(@PathVariable Long id) throws Exception {
         couponService.deleteCoupon(id);
@@ -50,9 +49,8 @@ public class CouponController {
     }
 
     @GetMapping("/admin/all")
-    public ResponseEntity<List<Coupon>> getAllCoupons(){
-        List<Coupon> coupons=couponService.findAllCoupons();
+    public ResponseEntity<List<Coupon>> getAllCoupons() {
+        List<Coupon> coupons = couponService.findAllCoupons();
         return ResponseEntity.ok(coupons);
     }
 }
-

@@ -16,23 +16,22 @@ public class DealController {
 
     @PostMapping
     public ResponseEntity<Deal> createDeals(@RequestBody Deal deal) throws Exception {
-        Deal createdDeal=dealService.createDeal(deal);
+        Deal createdDeal = dealService.createDeal(deal);
         return new ResponseEntity<>(createdDeal, HttpStatus.ACCEPTED);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Deal> updateDeal(@PathVariable Long id, @RequestBody Deal deal) throws Exception {
 
-        Deal updatedDeal=dealService.updateDeal(deal,id);
-        return new ResponseEntity<>(updatedDeal,HttpStatus.ACCEPTED);
+        Deal updatedDeal = dealService.updateDeal(deal, id);
+        return new ResponseEntity<>(updatedDeal, HttpStatus.ACCEPTED);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteDeal(@PathVariable Long id) throws Exception {
         dealService.deleteDeal(id);
-        ApiResponse apiResponse=new ApiResponse();
+        ApiResponse apiResponse = new ApiResponse();
         apiResponse.setMessage("deal deleted successfully");
-        return new ResponseEntity<>(apiResponse,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
     }
 }

@@ -21,28 +21,29 @@ import java.util.List;
 
 public class JwtTokenValidator extends OncePerRequestFilter {
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-        String jwt=request.getHeader("Authorization");
-        if (jwt!=null){
-            jwt=jwt.substring(7);
+        String jwt = request.getHeader("Authorization");
+        if (jwt != null) {
+            jwt = jwt.substring(7);
             try {
 
-                SecretKey key= Keys.hmacShaKeyFor(JWT_CONSTANT.SECRET_KEY.getBytes());
-                Claims claims= Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
-                String email=(String) claims.get("email");
-                String authorities=String.valueOf(claims.get("authorities"));
-                List<GrantedAuthority> auths= AuthorityUtils
+                SecretKey key = Keys.hmacShaKeyFor(JWT_CONSTANT.SECRET_KEY.getBytes());
+                Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
+                String email = (String) claims.get("email");
+                String authorities = String.valueOf(claims.get("authorities"));
+                List<GrantedAuthority> auths = AuthorityUtils
                         .commaSeparatedStringToAuthorityList(authorities);
-                Authentication authentication=new UsernamePasswordAuthenticationToken(email,null,auths);
+                Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, auths);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new BadCredentialsException("Invalid JWT Token");
 
             }
         }
 
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 }

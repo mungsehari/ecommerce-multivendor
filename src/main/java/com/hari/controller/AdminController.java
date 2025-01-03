@@ -19,9 +19,8 @@ public class AdminController {
     @PatchMapping("/seller/{id}/status/{status}")
     public ResponseEntity<Seller> updateSellerStatus(
             @PathVariable Long id,
-            @PathVariable AccountStatus status
-    ) throws Exception {
-        Seller seller=sellerService.updateSellerAccountStatus(id,status);
+            @PathVariable AccountStatus status) throws Exception {
+        Seller seller = sellerService.updateSellerAccountStatus(id, status);
         return ResponseEntity.ok(seller);
 
     }

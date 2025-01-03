@@ -26,41 +26,37 @@ public class CartIController {
 
     @GetMapping()
     private ResponseEntity<Cart> findUserCartHandler(
-            @RequestHeader("Authorization") String jwt
-    ) throws Exception {
-        User user=userService.findUserByJwtToken(jwt);
-        Cart cart=cartService.findUserCart(user);
+            @RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+        Cart cart = cartService.findUserCart(user);
         return new ResponseEntity<Cart>(cart, HttpStatus.OK);
     }
 
-
     @PutMapping("/add")
     public ResponseEntity<CartItem> addItemToCart(@RequestBody AddItemRequest request,
-                                                  @RequestHeader("Authorization") String jwt) throws Exception {
-        User user=userService.findUserByJwtToken(jwt);
-        Product product=productService.findProductById(request.getProductId());
-        CartItem item=cartService.addCartItem(
+            @RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+        Product product = productService.findProductById(request.getProductId());
+        CartItem item = cartService.addCartItem(
                 user,
                 product,
                 request.getSize(),
-                request.getQuantity()
-        );
-        ApiResponse apiResponse=new ApiResponse();
+                request.getQuantity());
+        ApiResponse apiResponse = new ApiResponse();
         apiResponse.setMessage("Item added to cart successfully");
-        return new ResponseEntity<>(item,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(item, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/item/{cartItemId}")
     public ResponseEntity<ApiResponse> deleteCartItemHandler(
             @PathVariable Long cartItemId,
-            @RequestHeader("Authorization") String jwt
-    ) throws Exception {
-        User user=userService.findUserByJwtToken(jwt);
-        cartItemService.removeCartItem(user.getId(),cartItemId);
+            @RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+        cartItemService.removeCartItem(user.getId(), cartItemId);
 
-        ApiResponse apiResponse=new ApiResponse();
+        ApiResponse apiResponse = new ApiResponse();
         apiResponse.setMessage("Item removed from cart successfully");
-        return new ResponseEntity<>(apiResponse,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/{cartItemId}")
@@ -68,14 +64,12 @@ public class CartIController {
             @PathVariable Long cartItemId,
             @RequestBody CartItem cartItem,
             @RequestHeader("Authorization") String jwt) throws Exception {
-        User user=userService.findUserByJwtToken(jwt);
-        CartItem updatedCartItem=null;
-        if (cartItem.getQuantity()>0){
-            updatedCartItem=cartItemService.updateCartItem(user.getId(),cartItemId,cartItem);
+        User user = userService.findUserByJwtToken(jwt);
+        CartItem updatedCartItem = null;
+        if (cartItem.getQuantity() > 0) {
+            updatedCartItem = cartItemService.updateCartItem(user.getId(), cartItemId, cartItem);
         }
-        return  new ResponseEntity<>(updatedCartItem,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(updatedCartItem, HttpStatus.ACCEPTED);
     }
-
-
 
 }
