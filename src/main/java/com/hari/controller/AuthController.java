@@ -1,7 +1,6 @@
 package com.hari.controller;
 
 import com.hari.domain.USER_ROLE;
-import com.hari.repository.UserRepository;
 import com.hari.request.LoginOtpRequest;
 import com.hari.request.LoginRequest;
 import com.hari.request.SignupRequest;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserRepository userRepository;
     private final AuthService authService;
 
     @PostMapping("/signup")
